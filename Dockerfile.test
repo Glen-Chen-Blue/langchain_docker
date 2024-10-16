@@ -1,0 +1,25 @@
+FROM base:latest
+
+ARG Folder
+ARG Model
+ENV My_Model=${Model}
+
+RUN echo "The folder is ${Folder}."
+RUN echo "The model is ${Model}."
+
+
+WORKDIR /app
+
+COPY ./startS.sh /app
+COPY ./kb_settings.yaml /app/
+COPY ./model_settings.yaml /app/
+COPY ./prompt_settings.yaml /app/
+COPY ./tool_settings.yaml /app/
+COPY ./changeModel.py /app/
+
+COPY ./${Folder}/* /app/data/knowledge_base/samples/content/
+
+EXPOSE 7861
+EXPOSE 8501
+
+CMD ["sh", "-c", "/app/startS.sh $My_Model"]
