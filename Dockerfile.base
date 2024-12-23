@@ -28,6 +28,8 @@ RUN pip install pyyaml
 RUN pip install langchain-chatchat -U
 RUN pip install opencv-python-headless 
 RUN pip show opencv-python-headless && pip uninstall -y opencv-python-headless || true
+RUN pip install python-dotenv
+RUN pip install Flask requests
 
 
 # 安装 Ollama

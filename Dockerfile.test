@@ -16,10 +16,13 @@ COPY ./model_settings.yaml /app/
 COPY ./prompt_settings.yaml /app/
 COPY ./tool_settings.yaml /app/
 COPY ./changeModel.py /app/
-
+COPY ./edge_proxy.py /app/
+COPY ./cloud_proxy.py /app/
 COPY ./${Folder}/* /app/data/knowledge_base/samples/content/
+# COPY ./models/${Model}/* /root/.ollama
+# EXPOSE 7861
+# EXPOSE 8501
+# EXPOSE 4000
 
-EXPOSE 7861
-EXPOSE 8501
-
+# CMD ["sh", "-c", "/app/startS.sh $My_Model", "$My_Pos"]
 CMD ["sh", "-c", "/app/startS.sh $My_Model"]

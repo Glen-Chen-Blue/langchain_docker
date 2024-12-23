@@ -16,3 +16,8 @@ docker build --build-arg Folder=$s1 --build-arg Model=$s2 --no-cache -f Dockerfi
 
 
 #  ./build.sh data1 3 first_test
+# docker network create chat
+# docker run --gpus "device=0" --network chat -p 8000:6000 --name cloud cloud
+# docker run --gpus "device=0" --network chat -p 6000:6000 --name edge edge
+# curl -X POST http://brave_liskov:6000/bot/ragChat      -H "Content-Type: application/json"      -d '{"query": "甚麼是edge computing？"}'
+# docker stop $(docker ps -q)
