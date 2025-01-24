@@ -1,0 +1,4668 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Langchain-Chatchat API Server",
+    "version": "0.3.1.3"
+  },
+  "paths": {
+    "/chat/feedback": {
+      "post": {
+        "tags": [
+          "ChatChat 对话"
+        ],
+        "summary": "返回llm模型对话评分",
+        "operationId": "chat_feedback_chat_feedback_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Body_chat_feedback_chat_feedback_post"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/kb_chat": {
+      "post": {
+        "tags": [
+          "ChatChat 对话"
+        ],
+        "summary": "知识库对话",
+        "operationId": "kb_chat_chat_kb_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_kb_chat_chat_kb_chat_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/file_chat": {
+      "post": {
+        "tags": [
+          "ChatChat 对话"
+        ],
+        "summary": "文件对话",
+        "operationId": "file_chat_chat_file_chat_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_file_chat_chat_file_chat_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/chat/completions": {
+      "post": {
+        "tags": [
+          "ChatChat 对话"
+        ],
+        "summary": "兼容 openai 的统一 chat 接口",
+        "description": "请求参数与 openai.chat.completions.create 一致，可以通过 extra_body 传入额外参数\ntools 和 tool_choice 可以直接传工具名称，会根据项目里包含的 tools 进行转换\n通过不同的参数组合调用不同的 chat 功能：\n- tool_choice\n    - extra_body 中包含 tool_input: 直接调用 tool_choice(tool_input)\n    - extra_body 中不包含 tool_input: 通过 agent 调用 tool_choice\n- tools: agent 对话\n- 其它：LLM 对话\n以后还要考虑其它的组合（如文件对话）\n返回与 openai 兼容的 Dict",
+        "operationId": "chat_completions_chat_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIChatInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Chat Completions Chat Chat Completions Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/{mode}/{param}/chat/completions": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "知识库对话，openai 兼容，参数与 /chat/kb_chat 一致",
+        "operationId": "kb_chat_endpoint_knowledge_base__mode___param__chat_completions_post",
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "local_kb",
+                "temp_kb",
+                "search_engine"
+              ],
+              "type": "string",
+              "title": "Mode"
+            }
+          },
+          {
+            "name": "param",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Param"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIChatInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/list_knowledge_bases": {
+      "get": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "获取知识库列表",
+        "operationId": "list_kbs_knowledge_base_list_knowledge_bases_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/create_knowledge_base": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "创建知识库",
+        "operationId": "create_kb_knowledge_base_create_knowledge_base_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_create_kb_knowledge_base_create_knowledge_base_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/delete_knowledge_base": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "删除知识库",
+        "operationId": "delete_kb_knowledge_base_delete_knowledge_base_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "title": "Knowledge Base Name",
+                "examples": [
+                  "samples"
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/list_files": {
+      "get": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "获取知识库内的文件列表",
+        "operationId": "list_files_knowledge_base_list_files_get",
+        "parameters": [
+          {
+            "name": "knowledge_base_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Knowledge Base Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/search_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "搜索知识库",
+        "operationId": "search_docs_knowledge_base_search_docs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_search_docs_knowledge_base_search_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Search Docs Knowledge Base Search Docs Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/upload_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "上传文件到知识库，并/或进行向量化",
+        "description": "API接口：上传文件，并/或向量化",
+        "operationId": "upload_docs_knowledge_base_upload_docs_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_docs_knowledge_base_upload_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/delete_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "删除知识库内指定文件",
+        "operationId": "delete_docs_knowledge_base_delete_docs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_delete_docs_knowledge_base_delete_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/update_info": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "更新知识库介绍",
+        "operationId": "update_info_knowledge_base_update_info_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_info_knowledge_base_update_info_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/update_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "更新现有文件到知识库",
+        "description": "更新知识库文档",
+        "operationId": "update_docs_knowledge_base_update_docs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_docs_knowledge_base_update_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/download_doc": {
+      "get": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "下载对应的知识文件",
+        "description": "下载知识库文档",
+        "operationId": "download_doc_knowledge_base_download_doc_get",
+        "parameters": [
+          {
+            "name": "knowledge_base_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "知识库名称",
+              "examples": [
+                "samples"
+              ],
+              "title": "Knowledge Base Name"
+            },
+            "description": "知识库名称"
+          },
+          {
+            "name": "file_name",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "文件名称",
+              "examples": [
+                "test.txt"
+              ],
+              "title": "File Name"
+            },
+            "description": "文件名称"
+          },
+          {
+            "name": "preview",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "是：浏览器内预览；否：下载",
+              "default": false,
+              "title": "Preview"
+            },
+            "description": "是：浏览器内预览；否：下载"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/recreate_vector_store": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "根据content中文档重建向量库，流式输出处理进度。",
+        "description": "recreate vector store from the content.\nthis is usefull when user can copy files to content folder directly instead of upload through network.\nby default, get_service_by_name only return knowledge base in the info.db and having document files in it.\nset allow_empty_kb to True make it applied on empty knowledge base which it not in the info.db or having no documents.",
+        "operationId": "recreate_vector_store_knowledge_base_recreate_vector_store_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_recreate_vector_store_knowledge_base_recreate_vector_store_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/upload_temp_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "上传文件到临时目录，用于文件对话。",
+        "description": "将文件保存到临时目录，并进行向量化。\n返回临时目录名称作为ID，同时也是临时向量库的ID。",
+        "operationId": "upload_temp_docs_knowledge_base_upload_temp_docs_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_temp_docs_knowledge_base_upload_temp_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/search_temp_docs": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "检索临时知识库",
+        "description": "从临时 FAISS 知识库中检索文档，用于文件对话",
+        "operationId": "search_temp_docs_knowledge_base_search_temp_docs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_search_temp_docs_knowledge_base_search_temp_docs_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "title": "Response Search Temp Docs Knowledge Base Search Temp Docs Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/kb_summary_api/summary_file_to_vector_store": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "单个知识库根据文件名称摘要",
+        "description": "单个知识库根据文件名称摘要\n:param model_name:\n:param max_tokens:\n:param temperature:\n:param file_description:\n:param file_name:\n:param knowledge_base_name:\n:param allow_empty_kb:\n:param vs_type:\n:param embed_model:\n:return:",
+        "operationId": "summary_file_to_vector_store_knowledge_base_kb_summary_api_summary_file_to_vector_store_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_summary_file_to_vector_store_knowledge_base_kb_summary_api_summary_file_to_vector_store_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/kb_summary_api/summary_doc_ids_to_vector_store": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "单个知识库根据doc_ids摘要",
+        "description": "单个知识库根据doc_ids摘要\n:param knowledge_base_name:\n:param doc_ids:\n:param model_name:\n:param max_tokens:\n:param temperature:\n:param file_description:\n:param vs_type:\n:param embed_model:\n:return:",
+        "operationId": "summary_doc_ids_to_vector_store_knowledge_base_kb_summary_api_summary_doc_ids_to_vector_store_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_summary_doc_ids_to_vector_store_knowledge_base_kb_summary_api_summary_doc_ids_to_vector_store_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_base/kb_summary_api/recreate_summary_vector_store": {
+      "post": {
+        "tags": [
+          "Knowledge Base Management"
+        ],
+        "summary": "重建单个知识库文件摘要",
+        "description": "重建单个知识库文件摘要\n:param max_tokens:\n:param model_name:\n:param temperature:\n:param file_description:\n:param knowledge_base_name:\n:param allow_empty_kb:\n:param vs_type:\n:param embed_model:\n:return:",
+        "operationId": "recreate_summary_vector_store_knowledge_base_kb_summary_api_recreate_summary_vector_store_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_recreate_summary_vector_store_knowledge_base_kb_summary_api_recreate_summary_vector_store_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools": {
+      "get": {
+        "tags": [
+          "Toolkits"
+        ],
+        "summary": "List Tools",
+        "operationId": "list_tools_tools_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/call": {
+      "post": {
+        "tags": [
+          "Toolkits"
+        ],
+        "summary": "Call Tool",
+        "operationId": "call_tool_tools_call_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_call_tool_tools_call_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__utils__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/models": {
+      "get": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "List Models",
+        "description": "整合所有平台的模型列表。",
+        "operationId": "list_models_v1_models_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response List Models V1 Models Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/chat/completions": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Chat Completions",
+        "operationId": "create_chat_completions_v1_chat_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIChatInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/completions": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Completions",
+        "operationId": "create_completions_v1_completions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIChatInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/embeddings": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Embeddings",
+        "operationId": "create_embeddings_v1_embeddings_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIEmbeddingsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/images/generations": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Image Generations",
+        "operationId": "create_image_generations_v1_images_generations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIImageGenerationsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/images/variations": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Image Variations",
+        "operationId": "create_image_variations_v1_images_variations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIImageVariationsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/images/edit": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Image Edit",
+        "operationId": "create_image_edit_v1_images_edit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIImageEditsInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/audio/translations": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Audio Translations",
+        "operationId": "create_audio_translations_v1_audio_translations_post",
+        "deprecated": "暂不支持",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIAudioTranslationsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/audio/transcriptions": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Audio Transcriptions",
+        "operationId": "create_audio_transcriptions_v1_audio_transcriptions_post",
+        "deprecated": "暂不支持",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIAudioTranscriptionsInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/audio/speech": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Create Audio Speech",
+        "operationId": "create_audio_speech_v1_audio_speech_post",
+        "deprecated": "暂不支持",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenAIAudioSpeechInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/files": {
+      "post": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Files",
+        "operationId": "files_v1_files_post",
+        "parameters": [
+          {
+            "name": "purpose",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "assistants",
+              "title": "Purpose"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_files_v1_files_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Files V1 Files Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "List Files",
+        "operationId": "list_files_v1_files_get",
+        "parameters": [
+          {
+            "name": "purpose",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Purpose"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "title": "Response List Files V1 Files Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/files/{file_id}": {
+      "get": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Retrieve File",
+        "operationId": "retrieve_file_v1_files__file_id__get",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Retrieve File V1 Files  File Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Delete File",
+        "operationId": "delete_file_v1_files__file_id__delete",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Delete File V1 Files  File Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/files/{file_id}/content": {
+      "get": {
+        "tags": [
+          "OpenAI 兼容平台整合接口"
+        ],
+        "summary": "Retrieve File Content",
+        "operationId": "retrieve_file_content_v1_files__file_id__content_get",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Retrieve File Content V1 Files  File Id  Content Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/server/configs": {
+      "post": {
+        "tags": [
+          "Server State"
+        ],
+        "summary": "获取服务器原始配置信息",
+        "description": "获取configs中的原始配置项，供前端使用",
+        "operationId": "get_server_configs_server_configs_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Server Configs Server Configs Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/server/get_prompt_template": {
+      "post": {
+        "tags": [
+          "Server State"
+        ],
+        "summary": "获取服务区配置的 prompt 模板",
+        "operationId": "get_server_prompt_template_server_get_prompt_template_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Body_get_server_prompt_template_server_get_prompt_template_post"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chatchat__server__types__server__response__base__BaseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/other/completion": {
+      "post": {
+        "tags": [
+          "Other"
+        ],
+        "summary": "要求llm模型补全(通过LLMChain)",
+        "operationId": "completion_other_completion_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_completion_other_completion_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Audio": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "Audio"
+      },
+      "Body_call_tool_tools_call_post": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "examples": [
+              "calculate"
+            ]
+          },
+          "tool_input": {
+            "type": "object",
+            "title": "Tool Input",
+            "default": {},
+            "examples": [
+              {
+                "text": "3+5/2"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Body_call_tool_tools_call_post"
+      },
+      "Body_chat_feedback_chat_feedback_post": {
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "maxLength": 32,
+            "title": "Message Id",
+            "description": "聊天记录id",
+            "default": ""
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score",
+            "description": "用户评分，满分100，越大表示评价越高",
+            "default": 0,
+            "max": 100
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "description": "用户评分理由，比如不符合事实等",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "Body_chat_feedback_chat_feedback_post"
+      },
+      "Body_completion_other_completion_post": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "用户输入",
+            "examples": [
+              "恼羞成怒"
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "流式输出",
+            "default": false
+          },
+          "echo": {
+            "type": "boolean",
+            "title": "Echo",
+            "description": "除了输出之外，还回显输入",
+            "default": false
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "LLM 模型名称。"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.01
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值",
+            "default": 1024
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "使用的prompt模板名称(在configs/prompt_config.py中配置)",
+            "default": "default"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "Body_completion_other_completion_post"
+      },
+      "Body_create_kb_knowledge_base_create_knowledge_base_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "vector_store_type": {
+            "type": "string",
+            "title": "Vector Store Type",
+            "default": "faiss"
+          },
+          "kb_info": {
+            "type": "string",
+            "title": "Kb Info",
+            "description": "知识库内容简介，用于Agent选择知识库。",
+            "default": ""
+          },
+          "embed_model": {
+            "type": "string",
+            "title": "Embed Model",
+            "default": "mxbai-embed-large"
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name"
+        ],
+        "title": "Body_create_kb_knowledge_base_create_knowledge_base_post"
+      },
+      "Body_delete_docs_knowledge_base_delete_docs_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "file_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "File Names",
+            "examples": [
+              [
+                "file_name.md",
+                "test.txt"
+              ]
+            ]
+          },
+          "delete_content": {
+            "type": "boolean",
+            "title": "Delete Content",
+            "default": false
+          },
+          "not_refresh_vs_cache": {
+            "type": "boolean",
+            "title": "Not Refresh Vs Cache",
+            "description": "暂不保存向量库（用于FAISS）",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name",
+          "file_names"
+        ],
+        "title": "Body_delete_docs_knowledge_base_delete_docs_post"
+      },
+      "Body_file_chat_chat_file_chat_post": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "用户输入",
+            "examples": [
+              "你好"
+            ]
+          },
+          "knowledge_id": {
+            "type": "string",
+            "title": "Knowledge Id",
+            "description": "临时知识库ID"
+          },
+          "top_k": {
+            "type": "integer",
+            "title": "Top K",
+            "description": "匹配向量数",
+            "default": 3
+          },
+          "score_threshold": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Score Threshold",
+            "description": "知识库匹配相关度阈值，取值范围在0-1之间，SCORE越小，相关度越高，取到1相当于不筛选，建议设置在0.5左右",
+            "default": 0.5
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/History"
+            },
+            "type": "array",
+            "title": "History",
+            "description": "历史对话",
+            "default": [],
+            "examples": [
+              [
+                {
+                  "content": "我们来玩成语接龙，我先来，生龙活虎",
+                  "role": "user"
+                },
+                {
+                  "content": "虎头虎脑",
+                  "role": "assistant"
+                }
+              ]
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "流式输出",
+            "default": false
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "LLM 模型名称。"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.01
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值"
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "使用的prompt模板名称(在 prompt_settings.yaml 中配置)",
+            "default": "default"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "knowledge_id"
+        ],
+        "title": "Body_file_chat_chat_file_chat_post"
+      },
+      "Body_files_v1_files_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_files_v1_files_post"
+      },
+      "Body_get_server_prompt_template_server_get_prompt_template_post": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "模板类型，可选值：{available_template_types}",
+            "default": "llm_model"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "模板名称",
+            "default": "default"
+          }
+        },
+        "type": "object",
+        "title": "Body_get_server_prompt_template_server_get_prompt_template_post"
+      },
+      "Body_kb_chat_chat_kb_chat_post": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "用户输入",
+            "examples": [
+              "你好"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "local_kb",
+              "temp_kb",
+              "search_engine"
+            ],
+            "title": "Mode",
+            "description": "知识来源",
+            "default": "local_kb"
+          },
+          "kb_name": {
+            "type": "string",
+            "title": "Kb Name",
+            "description": "mode=local_kb时为知识库名称；temp_kb时为临时知识库ID，search_engine时为搜索引擎名称",
+            "default": "",
+            "examples": [
+              "samples"
+            ]
+          },
+          "top_k": {
+            "type": "integer",
+            "title": "Top K",
+            "description": "匹配向量数",
+            "default": 3
+          },
+          "score_threshold": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Score Threshold",
+            "description": "知识库匹配相关度阈值，取值范围在0-1之间，SCORE越小，相关度越高，取到1相当于不筛选，建议设置在0.5左右",
+            "default": 0.5
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/History"
+            },
+            "type": "array",
+            "title": "History",
+            "description": "历史对话",
+            "default": [],
+            "examples": [
+              [
+                {
+                  "content": "我们来玩成语接龙，我先来，生龙活虎",
+                  "role": "user"
+                },
+                {
+                  "content": "虎头虎脑",
+                  "role": "assistant"
+                }
+              ]
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "description": "流式输出",
+            "default": true
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "description": "LLM 模型名称。",
+            "default": "llama3.1"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.3
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值"
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "使用的prompt模板名称(在prompt_settings.yaml中配置)",
+            "default": "default"
+          },
+          "return_direct": {
+            "type": "boolean",
+            "title": "Return Direct",
+            "description": "直接返回检索结果，不送入 LLM",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "query"
+        ],
+        "title": "Body_kb_chat_chat_kb_chat_post"
+      },
+      "Body_recreate_summary_vector_store_knowledge_base_kb_summary_api_recreate_summary_vector_store_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "allow_empty_kb": {
+            "type": "boolean",
+            "title": "Allow Empty Kb",
+            "default": true
+          },
+          "vs_type": {
+            "type": "string",
+            "title": "Vs Type",
+            "default": "faiss"
+          },
+          "embed_model": {
+            "type": "string",
+            "title": "Embed Model",
+            "default": "mxbai-embed-large"
+          },
+          "file_description": {
+            "type": "string",
+            "title": "File Description",
+            "default": ""
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "LLM 模型名称。"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.01
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值"
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name"
+        ],
+        "title": "Body_recreate_summary_vector_store_knowledge_base_kb_summary_api_recreate_summary_vector_store_post"
+      },
+      "Body_recreate_vector_store_knowledge_base_recreate_vector_store_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "allow_empty_kb": {
+            "type": "boolean",
+            "title": "Allow Empty Kb",
+            "default": true
+          },
+          "vs_type": {
+            "type": "string",
+            "title": "Vs Type",
+            "default": "faiss"
+          },
+          "embed_model": {
+            "type": "string",
+            "title": "Embed Model",
+            "default": "mxbai-embed-large"
+          },
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "description": "知识库中单段文本最大长度",
+            "default": 750
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "知识库中相邻文本重合长度",
+            "default": 150
+          },
+          "zh_title_enhance": {
+            "type": "boolean",
+            "title": "Zh Title Enhance",
+            "description": "是否开启中文标题加强",
+            "default": false
+          },
+          "not_refresh_vs_cache": {
+            "type": "boolean",
+            "title": "Not Refresh Vs Cache",
+            "description": "暂不保存向量库（用于FAISS）",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name"
+        ],
+        "title": "Body_recreate_vector_store_knowledge_base_recreate_vector_store_post"
+      },
+      "Body_search_docs_knowledge_base_search_docs_post": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "用户输入",
+            "default": "",
+            "examples": [
+              "你好"
+            ]
+          },
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "description": "知识库名称",
+            "examples": [
+              "samples"
+            ]
+          },
+          "top_k": {
+            "type": "integer",
+            "title": "Top K",
+            "description": "匹配向量数",
+            "default": 3
+          },
+          "score_threshold": {
+            "type": "number",
+            "maximum": 2,
+            "minimum": 0,
+            "title": "Score Threshold",
+            "description": "知识库匹配相关度阈值，取值范围在0-1之间，SCORE越小，相关度越高，取到2相当于不筛选，建议设置在0.5左右",
+            "default": 0.5
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name",
+            "description": "文件名称，支持 sql 通配符",
+            "default": ""
+          },
+          "metadata": {
+            "type": "object",
+            "title": "Metadata",
+            "description": "根据 metadata 进行过滤，仅支持一级键",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name"
+        ],
+        "title": "Body_search_docs_knowledge_base_search_docs_post"
+      },
+      "Body_search_temp_docs_knowledge_base_search_temp_docs_post": {
+        "properties": {
+          "knowledge_id": {
+            "type": "string",
+            "title": "Knowledge Id",
+            "description": "知识库 ID",
+            "examples": [
+              "example_id"
+            ]
+          },
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "用户输入",
+            "default": "",
+            "examples": [
+              "你好"
+            ]
+          },
+          "top_k": {
+            "type": "integer",
+            "title": "Top K",
+            "description": "返回的文档数量",
+            "examples": [
+              5
+            ]
+          },
+          "score_threshold": {
+            "type": "number",
+            "title": "Score Threshold",
+            "description": "分数阈值",
+            "examples": [
+              0.8
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_id",
+          "top_k",
+          "score_threshold"
+        ],
+        "title": "Body_search_temp_docs_knowledge_base_search_temp_docs_post"
+      },
+      "Body_summary_doc_ids_to_vector_store_knowledge_base_kb_summary_api_summary_doc_ids_to_vector_store_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "doc_ids": {
+            "items": {},
+            "type": "array",
+            "title": "Doc Ids",
+            "default": [],
+            "examples": [
+              [
+                "uuid"
+              ]
+            ]
+          },
+          "vs_type": {
+            "type": "string",
+            "title": "Vs Type",
+            "default": "faiss"
+          },
+          "embed_model": {
+            "type": "string",
+            "title": "Embed Model",
+            "default": "mxbai-embed-large"
+          },
+          "file_description": {
+            "type": "string",
+            "title": "File Description",
+            "default": ""
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "LLM 模型名称。"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.01
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值"
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name"
+        ],
+        "title": "Body_summary_doc_ids_to_vector_store_knowledge_base_kb_summary_api_summary_doc_ids_to_vector_store_post"
+      },
+      "Body_summary_file_to_vector_store_knowledge_base_kb_summary_api_summary_file_to_vector_store_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "examples": [
+              "samples"
+            ]
+          },
+          "file_name": {
+            "type": "string",
+            "title": "File Name",
+            "examples": [
+              "test.pdf"
+            ]
+          },
+          "allow_empty_kb": {
+            "type": "boolean",
+            "title": "Allow Empty Kb",
+            "default": true
+          },
+          "vs_type": {
+            "type": "string",
+            "title": "Vs Type",
+            "default": "faiss"
+          },
+          "embed_model": {
+            "type": "string",
+            "title": "Embed Model",
+            "default": "mxbai-embed-large"
+          },
+          "file_description": {
+            "type": "string",
+            "title": "File Description",
+            "default": ""
+          },
+          "model_name": {
+            "type": "string",
+            "title": "Model Name",
+            "description": "LLM 模型名称。"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Temperature",
+            "description": "LLM 采样温度",
+            "default": 0.01
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens",
+            "description": "限制LLM生成Token数量，默认None代表模型最大值"
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name",
+          "file_name"
+        ],
+        "title": "Body_summary_file_to_vector_store_knowledge_base_kb_summary_api_summary_file_to_vector_store_post"
+      },
+      "Body_update_docs_knowledge_base_update_docs_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "description": "知识库名称",
+            "examples": [
+              "samples"
+            ]
+          },
+          "file_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "File Names",
+            "description": "文件名称，支持多文件",
+            "examples": [
+              [
+                "file_name1",
+                "text.txt"
+              ]
+            ]
+          },
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "description": "知识库中单段文本最大长度",
+            "default": 750
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "知识库中相邻文本重合长度",
+            "default": 150
+          },
+          "zh_title_enhance": {
+            "type": "boolean",
+            "title": "Zh Title Enhance",
+            "description": "是否开启中文标题加强",
+            "default": false
+          },
+          "override_custom_docs": {
+            "type": "boolean",
+            "title": "Override Custom Docs",
+            "description": "是否覆盖之前自定义的docs",
+            "default": false
+          },
+          "docs": {
+            "type": "string",
+            "title": "Docs",
+            "description": "自定义的docs，需要转为json字符串",
+            "default": ""
+          },
+          "not_refresh_vs_cache": {
+            "type": "boolean",
+            "title": "Not Refresh Vs Cache",
+            "description": "暂不保存向量库（用于FAISS）",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name",
+          "file_names"
+        ],
+        "title": "Body_update_docs_knowledge_base_update_docs_post"
+      },
+      "Body_update_info_knowledge_base_update_info_post": {
+        "properties": {
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "description": "知识库名称",
+            "examples": [
+              "samples"
+            ]
+          },
+          "kb_info": {
+            "type": "string",
+            "title": "Kb Info",
+            "description": "知识库介绍",
+            "examples": [
+              "这是一个知识库"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "knowledge_base_name",
+          "kb_info"
+        ],
+        "title": "Body_update_info_knowledge_base_update_info_post"
+      },
+      "Body_upload_docs_knowledge_base_upload_docs_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files",
+            "description": "上传文件，支持多文件"
+          },
+          "knowledge_base_name": {
+            "type": "string",
+            "title": "Knowledge Base Name",
+            "description": "知识库名称",
+            "examples": [
+              "samples"
+            ]
+          },
+          "override": {
+            "type": "boolean",
+            "title": "Override",
+            "description": "覆盖已有文件",
+            "default": false
+          },
+          "to_vector_store": {
+            "type": "boolean",
+            "title": "To Vector Store",
+            "description": "上传文件后是否进行向量化",
+            "default": true
+          },
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "description": "知识库中单段文本最大长度",
+            "default": 750
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "知识库中相邻文本重合长度",
+            "default": 150
+          },
+          "zh_title_enhance": {
+            "type": "boolean",
+            "title": "Zh Title Enhance",
+            "description": "是否开启中文标题加强",
+            "default": false
+          },
+          "docs": {
+            "type": "string",
+            "title": "Docs",
+            "description": "自定义的docs，需要转为json字符串",
+            "default": ""
+          },
+          "not_refresh_vs_cache": {
+            "type": "boolean",
+            "title": "Not Refresh Vs Cache",
+            "description": "暂不保存向量库（用于FAISS）",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "files",
+          "knowledge_base_name"
+        ],
+        "title": "Body_upload_docs_knowledge_base_upload_docs_post"
+      },
+      "Body_upload_temp_docs_knowledge_base_upload_temp_docs_post": {
+        "properties": {
+          "files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Files",
+            "description": "上传文件，支持多文件"
+          },
+          "prev_id": {
+            "type": "string",
+            "title": "Prev Id",
+            "description": "前知识库ID"
+          },
+          "chunk_size": {
+            "type": "integer",
+            "title": "Chunk Size",
+            "description": "知识库中单段文本最大长度",
+            "default": 750
+          },
+          "chunk_overlap": {
+            "type": "integer",
+            "title": "Chunk Overlap",
+            "description": "知识库中相邻文本重合长度",
+            "default": 150
+          },
+          "zh_title_enhance": {
+            "type": "boolean",
+            "title": "Zh Title Enhance",
+            "description": "是否开启中文标题加强",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "Body_upload_temp_docs_knowledge_base_upload_temp_docs_post"
+      },
+      "ChatCompletionAssistantMessageParam": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "const": "assistant",
+            "title": "Role"
+          },
+          "audio": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Audio"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartRefusalParam"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FunctionCall"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "refusal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refusal"
+          },
+          "tool_calls": {
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionMessageToolCallParam"
+            },
+            "type": "array",
+            "title": "Tool Calls"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "title": "ChatCompletionAssistantMessageParam"
+      },
+      "ChatCompletionContentPartImageParam": {
+        "properties": {
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURL"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "const": "image_url",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "image_url",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartImageParam"
+      },
+      "ChatCompletionContentPartInputAudioParam": {
+        "properties": {
+          "input_audio": {
+            "$ref": "#/components/schemas/InputAudio"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "const": "input_audio",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "input_audio",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartInputAudioParam"
+      },
+      "ChatCompletionContentPartRefusalParam": {
+        "properties": {
+          "refusal": {
+            "type": "string",
+            "title": "Refusal"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "refusal"
+            ],
+            "const": "refusal",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "refusal",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartRefusalParam"
+      },
+      "ChatCompletionContentPartTextParam": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "const": "text",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text",
+          "type"
+        ],
+        "title": "ChatCompletionContentPartTextParam"
+      },
+      "ChatCompletionFunctionCallOptionParam": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ChatCompletionFunctionCallOptionParam"
+      },
+      "ChatCompletionFunctionMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "name",
+          "role"
+        ],
+        "title": "ChatCompletionFunctionMessageParam"
+      },
+      "ChatCompletionMessageToolCallParam": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "function": {
+            "$ref": "#/components/schemas/openai__types__chat__chat_completion_message_tool_call_param__Function"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionMessageToolCallParam"
+      },
+      "ChatCompletionNamedToolChoiceParam": {
+        "properties": {
+          "function": {
+            "$ref": "#/components/schemas/openai__types__chat__chat_completion_named_tool_choice_param__Function"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionNamedToolChoiceParam"
+      },
+      "ChatCompletionSystemMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "system"
+            ],
+            "const": "system",
+            "title": "Role"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "ChatCompletionSystemMessageParam"
+      },
+      "ChatCompletionToolMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "const": "tool",
+            "title": "Role"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "title": "Tool Call Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role",
+          "tool_call_id"
+        ],
+        "title": "ChatCompletionToolMessageParam"
+      },
+      "ChatCompletionToolParam": {
+        "properties": {
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "const": "function",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "function",
+          "type"
+        ],
+        "title": "ChatCompletionToolParam"
+      },
+      "ChatCompletionUserMessageParam": {
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartTextParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartImageParam"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionContentPartInputAudioParam"
+                    }
+                  ]
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "const": "user",
+            "title": "Role"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "role"
+        ],
+        "title": "ChatCompletionUserMessageParam"
+      },
+      "FunctionCall": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "FunctionCall"
+      },
+      "FunctionDefinition": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "type": "object",
+            "title": "Parameters"
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "FunctionDefinition"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "History": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "title": "History",
+        "description": "对话历史\n可从dict生成，如\nh = History(**{\"role\":\"user\",\"content\":\"你好\"})\n也可转换为tuple，如\nh.to_msy_tuple = (\"human\", \"你好\")"
+      },
+      "ImageURL": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "low",
+              "high"
+            ],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "ImageURL"
+      },
+      "InputAudio": {
+        "properties": {
+          "data": {
+            "type": "string",
+            "title": "Data"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "title": "Format"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data",
+          "format"
+        ],
+        "title": "InputAudio"
+      },
+      "JSONSchema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "schema": {
+            "type": "object",
+            "title": "Schema"
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "JSONSchema"
+      },
+      "ListResponse": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "title": "Code",
+            "description": "API status code",
+            "default": 200
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "API status message",
+            "default": "success"
+          },
+          "data": {
+            "items": {},
+            "type": "array",
+            "title": "Data",
+            "description": "List of data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "ListResponse",
+        "example": {
+          "code": 200,
+          "data": [
+            "doc1.docx",
+            "doc2.pdf",
+            "doc3.txt"
+          ],
+          "msg": "success"
+        }
+      },
+      "OpenAIAudioSpeechInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "input": {
+            "type": "string",
+            "title": "Input"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "voice": {
+            "type": "string",
+            "title": "Voice"
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "mp3",
+                  "opus",
+                  "aac",
+                  "flac",
+                  "pcm",
+                  "wav"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "speed": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "input",
+          "model",
+          "voice"
+        ],
+        "title": "OpenAIAudioSpeechInput"
+      },
+      "OpenAIAudioTranscriptionsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "file": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
+            "title": "File"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "temperature": {
+            "type": "number",
+            "title": "Temperature",
+            "default": 0.3
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "timestamp_granularities": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "word",
+                    "segment"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timestamp Granularities"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "file",
+          "model"
+        ],
+        "title": "OpenAIAudioTranscriptionsInput"
+      },
+      "OpenAIAudioTranslationsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "file": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
+            "title": "File"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Prompt"
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "temperature": {
+            "type": "number",
+            "title": "Temperature",
+            "default": 0.3
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "file",
+          "model"
+        ],
+        "title": "OpenAIAudioTranslationsInput"
+      },
+      "OpenAIChatInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "messages": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ChatCompletionSystemMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionUserMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionAssistantMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionToolMessageParam"
+                },
+                {
+                  "$ref": "#/components/schemas/ChatCompletionFunctionMessageParam"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Messages"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model",
+            "default": "llama3.1"
+          },
+          "frequency_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frequency Penalty"
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "auto"
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/ChatCompletionFunctionCallOptionParam"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Function Call"
+          },
+          "functions": {
+            "items": {
+              "$ref": "#/components/schemas/openai__types__chat__completion_create_params__Function"
+            },
+            "type": "array",
+            "title": "Functions"
+          },
+          "logit_bias": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logit Bias"
+          },
+          "logprobs": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Logprobs"
+          },
+          "max_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Tokens"
+          },
+          "n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N"
+          },
+          "presence_penalty": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Presence Penalty"
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ResponseFormatText"
+              },
+              {
+                "$ref": "#/components/schemas/ResponseFormatJSONObject"
+              },
+              {
+                "$ref": "#/components/schemas/ResponseFormatJSONSchema"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "seed": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed"
+          },
+          "stop": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stop"
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream"
+          },
+          "temperature": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature",
+            "default": 0.3
+          },
+          "tool_choice": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "auto",
+                  "required"
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/ChatCompletionNamedToolChoiceParam"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Choice"
+          },
+          "tools": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/ChatCompletionToolParam"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Tools"
+          },
+          "top_logprobs": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Logprobs"
+          },
+          "top_p": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top P"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "title": "OpenAIChatInput"
+      },
+      "OpenAIEmbeddingsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "input": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Input"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "dimensions": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dimensions"
+          },
+          "encoding_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "float",
+                  "base64"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Encoding Format"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "input",
+          "model"
+        ],
+        "title": "OpenAIEmbeddingsInput"
+      },
+      "OpenAIImageEditsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N",
+            "default": 1
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "b64_json"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "256x256",
+                  "512x512",
+                  "1024x1024",
+                  "1792x1024",
+                  "1024x1792"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size",
+            "default": "256x256"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
+            "title": "Image"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "mask": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
+            "title": "Mask"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "model",
+          "image",
+          "prompt",
+          "mask"
+        ],
+        "title": "OpenAIImageEditsInput"
+      },
+      "OpenAIImageGenerationsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N",
+            "default": 1
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "b64_json"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "256x256",
+                  "512x512",
+                  "1024x1024",
+                  "1792x1024",
+                  "1024x1792"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size",
+            "default": "256x256"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "hd"
+            ],
+            "title": "Quality"
+          },
+          "style": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "vivid",
+                  "natural"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Style"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "title": "OpenAIImageGenerationsInput"
+      },
+      "OpenAIImageVariationsInput": {
+        "properties": {
+          "user": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User"
+          },
+          "extra_headers": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Headers"
+          },
+          "extra_query": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Query"
+          },
+          "extra_body": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Body"
+          },
+          "timeout": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timeout"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N",
+            "default": 1
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "b64_json"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "256x256",
+                  "512x512",
+                  "1024x1024",
+                  "1792x1024",
+                  "1024x1792"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size",
+            "default": "256x256"
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "binary"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "format": "uri"
+              }
+            ],
+            "title": "Image"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "model",
+          "image"
+        ],
+        "title": "OpenAIImageVariationsInput"
+      },
+      "ResponseFormatJSONObject": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "json_object"
+            ],
+            "const": "json_object",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormatJSONObject"
+      },
+      "ResponseFormatJSONSchema": {
+        "properties": {
+          "json_schema": {
+            "$ref": "#/components/schemas/JSONSchema"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "json_schema"
+            ],
+            "const": "json_schema",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "json_schema",
+          "type"
+        ],
+        "title": "ResponseFormatJSONSchema"
+      },
+      "ResponseFormatText": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "const": "text",
+            "title": "Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "ResponseFormatText"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "chatchat__server__types__server__response__base__BaseResponse": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "title": "Code",
+            "description": "API status code",
+            "default": 200
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "API status message",
+            "default": "success"
+          },
+          "data": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data",
+            "description": "API data"
+          }
+        },
+        "type": "object",
+        "title": "BaseResponse",
+        "example": {
+          "code": 200,
+          "msg": "success"
+        }
+      },
+      "chatchat__server__utils__BaseResponse": {
+        "properties": {
+          "code": {
+            "type": "integer",
+            "title": "Code",
+            "description": "API status code",
+            "default": 200
+          },
+          "msg": {
+            "type": "string",
+            "title": "Msg",
+            "description": "API status message",
+            "default": "success"
+          },
+          "data": {
+            "title": "Data",
+            "description": "API data"
+          }
+        },
+        "type": "object",
+        "title": "BaseResponse",
+        "example": {
+          "code": 200,
+          "msg": "success"
+        }
+      },
+      "openai__types__chat__chat_completion_message_tool_call_param__Function": {
+        "properties": {
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "arguments",
+          "name"
+        ],
+        "title": "Function"
+      },
+      "openai__types__chat__chat_completion_named_tool_choice_param__Function": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Function"
+      },
+      "openai__types__chat__completion_create_params__Function": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "type": "object",
+            "title": "Parameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Function"
+      }
+    }
+  }
+}

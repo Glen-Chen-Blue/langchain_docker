@@ -1,0 +1,28 @@
+{
+  "control_node": [
+    {
+      "name": "control_node_1",
+      "ip": "ip1",
+      "port": "port1"
+    },
+    {
+      "name": "control_node_2",
+      "ip": "ip2",
+      "port": "port2"
+    }
+  ],
+  "compute_node": [
+    {
+      "topic": "topic1",
+      "ip": "ip1",
+      "port": "port1",
+      "control_node": "control_node_1"
+    },
+    {
+      "topic": "topic2",
+      "ip": "ip2",
+      "port": "port2",
+      "control_node": "control_node_2"
+    }
+  ]
+}

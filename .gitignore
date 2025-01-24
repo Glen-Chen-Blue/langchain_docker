@@ -1,1 +1,5 @@
-models
+myenv
+data/*
+models/*
+*.xml
+

@@ -1,0 +1,24 @@
+{
+    "control_node": [
+        {
+            "name": "node1",
+            "ip": "192.168.60.215",
+            "port": "8100",
+            "broadcast_status": 200
+        }
+    ],
+    "compute_node": [
+        {
+            "control_node": "node1",
+            "ip": "192.168.60.215",
+            "port": "8102",
+            "topic": "edge_computing"
+        },
+        {
+            "topic": "llm",
+            "ip": "192.168.60.215",
+            "port": "8101",
+            "control_node": "node1"
+        }
+    ]
+}

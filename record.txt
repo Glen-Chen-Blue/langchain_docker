@@ -1,0 +1,39 @@
+efo:
+192.168.60.215:8000
+control:
+192.168.60.215:8100
+compute:
+192.168.60.215:8101
+192.168.60.215:8102
+
+
+
+embedding
+1054M
+
+3_2_1b
+2520M
+
+3_2_3b
+3718M
+
+3_1_8b
+6460M
+
+756/1:29.7/89.7
+1202/2:13.9/133.9
+977/1:57.9/117.9
+
+8.4
+8.9
+8.2
+
+curl -X POST "http://localhost:8101/bot/ragChat" -H "Content-Type: application/json" -d '{
+  "query": "What is edge computing?",
+  "topic": "edge_computing"
+}'
+
+curl -X POST "http://localhost:8102/bot/ragChat" -H "Content-Type: application/json" -d '{
+  "query": "What is llm?",
+  "topic": "llm"
+}'

@@ -2,27 +2,36 @@ FROM base:latest
 
 ARG Folder
 ARG Model
+ARG Topic
+ARG InternalIP
+ARG Port
+ARG ControlPort
+
 ENV My_Model=${Model}
+ENV My_Topic=${Topic}
+ENV My_IP=${InternalIP}
+ENV My_Port=${Port}
+ENV My_ControlPort=${ControlPort}
 
 RUN echo "The folder is ${Folder}."
 RUN echo "The model is ${Model}."
+RUN echo "The topic is ${Topic}."
+RUN echo "The internal IP is ${InternalIP}."
+RUN echo "The port is ${Port}."
+RUN echo "The control port is ${ControlPort}."
 
 
 WORKDIR /app
 
 COPY ./startS.sh /app
-COPY ./kb_settings.yaml /app/
-COPY ./model_settings.yaml /app/
-COPY ./prompt_settings.yaml /app/
-COPY ./tool_settings.yaml /app/
-COPY ./changeModel.py /app/
-COPY ./edge_proxy.py /app/
-COPY ./cloud_proxy.py /app/
-COPY ./${Folder}/* /app/data/knowledge_base/samples/content/
-# COPY ./models/${Model}/* /root/.ollama
-# EXPOSE 7861
-# EXPOSE 8501
-# EXPOSE 4000
+COPY ./langchain/kb_settings.yaml /app/
+COPY ./langchain/model_settings.yaml /app/
+COPY ./langchain/prompt_settings.yaml /app/
+COPY ./langchain/tool_settings.yaml /app/
+COPY ./server/changeModel.py /app/
+COPY ./server/server_compute.py /app/
+COPY ./data/${Folder}/* /app/data/knowledge_base/samples/content/
+COPY ./models/${Model}/* /root/.ollama
 
-# CMD ["sh", "-c", "/app/startS.sh $My_Model", "$My_Pos"]
-CMD ["sh", "-c", "/app/startS.sh $My_Model"]
+CMD ["/app/startS.sh"]
+
