@@ -1,5 +1,6 @@
 myenv
 data/*
+!data/download.py
 models/*
 *.xml
 
