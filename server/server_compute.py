@@ -45,7 +45,7 @@ def rag_chat():
     data = request.json
     query = data.get('query')
     topic = data.get('topic')
-
+    llm = data.get('llm')
     if not query or not topic:
         return jsonify({"error": "Data loss"}), 400
 
@@ -58,13 +58,13 @@ def rag_chat():
                     "mode": "local_kb",
                     "kb_name": "samples",
                     "top_k": 3,
-                    "score_threshold": 0.3,
+                    "score_threshold": 0,
                     "stream": False,
                     "model": Model_name,
-                    "temperature": 0.6,
-                    "max_tokens": 3000,
+                    "temperature": 0.2,
+                    "max_tokens": 200,
                     "prompt_name": "default",
-                    "return_direct": False,
+                    "return_direct": not llm,
                 },
                 headers={
                     'Content-Type': 'application/json',
@@ -76,12 +76,17 @@ def rag_chat():
                     response_data = response.json()
                     if isinstance(response_data, str):
                         response_data = json.loads(response_data)
-                    content = response_data.get('choices', [{}])[0].get('message', {}).get('content', "")
+                    if llm:
+                        content = response_data.get('choices', [{}])[0].get('message', {}).get('content', "")
+                    else:
+                        content = response_data.get("docs", [])
+                        content = [doc.split("\n\n")[-2].strip() for doc in content]
                     return Response(
                         json.dumps({"content": content}, ensure_ascii=False),
                         status=200,
                         mimetype='application/json'
                     )
+                    
                 except (ValueError, KeyError) as e:
                     print(f"Error parsing response: {e}")
                     return jsonify({"error": "Invalid response format from backend"}), 500
@@ -114,6 +119,56 @@ def rag_chat():
         print("Error sending request to backend:", e)
         return jsonify({"error": "Backend request failed"}), 500
 
+
+@app.route('/bot/llmChat', methods=['POST'])
+def llm_chat():
+    data = request.json
+    query = data.get('query')
+    if not query:
+        return jsonify({"error": "Data loss"}), 400
+    try:
+        response = requests.post(
+            f"{BACKEND_URL}/chat/chat/completions",
+            json={
+                "messages": [
+                    {
+                        "content": query,
+                        "role": "user"
+                    }
+                ],
+                "model": Model_name,
+                "stream": False,
+                "temperature": 0.2,
+                "max_tokens": 200,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        )
+        if response.status_code == 200:
+            try:
+                response_data = response.json()
+                if isinstance(response_data, str):
+                    response_data = json.loads(response_data)
+                content = response_data.get('choices', [{}])[0].get('message', {}).get('content', "")
+                return Response(
+                    json.dumps({"content": content}, ensure_ascii=False),
+                    status=200,
+                    mimetype='application/json'
+                )
+            except (ValueError, KeyError) as e:
+                print(f"Error parsing response: {e}")
+                return jsonify({"error": "Invalid response format from backend"}), 500
+        else:
+            return jsonify({"error": "Failed to get response from backend"}), response.status_code
+
+    except requests.exceptions.RequestException as e:
+        print("Error sending request to backend:", e)
+        return jsonify({"error": "Backend request failed"}), 500
+    
+
+    
 if __name__ == "__main__":
     register_with_control_node()
     app.run(debug=False, host="0.0.0.0", port=int(Port))

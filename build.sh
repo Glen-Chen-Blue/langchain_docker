@@ -41,7 +41,7 @@ docker build \
     -t $s7 .
 # if s7 container has been created, remove it
 if [ "$(docker ps -aq -f name=$s7)" ]; then
-    docker stop $s7 || echo "Warning: Failed to stop container $s7"
+    # docker stop $s7 || echo "Warning: Failed to stop container $s7"
     docker rm -f $s7 || echo "Warning: Failed to remove container $s7"
 fi
 # Run the Docker container

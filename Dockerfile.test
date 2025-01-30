@@ -30,6 +30,7 @@ COPY ./langchain/prompt_settings.yaml /app/
 COPY ./langchain/tool_settings.yaml /app/
 COPY ./server/changeModel.py /app/
 COPY ./server/server_compute.py /app/
+RUN rm -rf /app/data/knowledge_base/samples/content/*
 COPY ./data/${Folder}/* /app/data/knowledge_base/samples/content/
 COPY ./models/${Model}/* /root/.ollama
 

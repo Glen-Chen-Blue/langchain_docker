@@ -30,8 +30,9 @@ embedding
 
 curl -X POST "http://localhost:8101/bot/ragChat" -H "Content-Type: application/json" -d '{
   "query": "What is edge computing?",
-  "topic": "edge_computing"
+  "topic": "test"
 }'
+  "llm": "t"
 
 curl -X POST "http://localhost:8102/bot/ragChat" -H "Content-Type: application/json" -d '{
   "query": "What is llm?",
