@@ -46,12 +46,3 @@ if [ "$(docker ps -aq -f name=$s7)" ]; then
 fi
 # Run the Docker container
 docker run --gpus "device=$s6" -p $s4:$s4 --name $s7 $s7
-
-#  ./build.sh llm_1 3_2_1b llm 8101 8100 llm_1
-
-
-# docker network create chat
-# docker run --gpus "device=0" -p 6000:$6000 --name edge edge
-# docker run --gpus "device=0" --network chat -p 6000:6000 --name edge edge
-# curl -X POST http://brave_liskov:6000/bot/ragChat      -H "Content-Type: application/json"      -d '{"query": "甚麼是edge computing？"}'
-# docker stop $(docker ps -q)

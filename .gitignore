@@ -1,6 +1,11 @@
 myenv
-data/*
 !data/download.py
-models/*
 *.xml
-
+*.log
+*.pt
+App/outputs
+App/llama.cpp
+App/unsloth_compiled_cache
+system
+model
+data

@@ -1,0 +1,44 @@
+FROM ubuntu:latest
+
+# 安裝必要工具
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    build-essential \
+    wget \
+    curl \
+    git \
+    rsync
+
+# 添加 Python 3.11 PPA 並安裝 Python 3.11
+RUN add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y python3.11 python3.11-dev python3.11-venv lsof
+
+# 安裝 Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# 設置 Python3.11 為默認 Python3
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# 檢查 Python 版本
+RUN python3 --version
+
+# 安裝 NVIDIA GPU 支援
+RUN apt-get install -y nvidia-utils-550
+
+# 確保 pip 是最新版本，避免與系統預裝的 Python 衝突
+RUN python3 -m ensurepip --default-pip
+RUN python3 -m pip install --upgrade --force-reinstall pip setuptools wheel
+
+# 移除 Debian 預裝的 blinker，避免 pip 安裝失敗
+RUN apt-get remove -y python3-blinker
+
+# 安裝 Python 依賴，忽略系統套件衝突
+RUN python3 -m pip install --break-system-packages python-dotenv Flask requests
+
+# 設定工作目錄
+WORKDIR /app
+
+# 讓容器保持開啟狀態
+CMD ["ollama", "serve"]
+

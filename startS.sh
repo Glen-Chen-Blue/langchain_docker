@@ -26,8 +26,9 @@ echo "CONTROL_PORT=$My_ControlPort" >> .env
 python3 changeModel.py
 
 chatchat kb -r
+chatchat kb -i
 chatchat start -a & sleep 10
 
-
+echo "Start Server"
 python3 server_compute.py
 # tail -f /dev/null

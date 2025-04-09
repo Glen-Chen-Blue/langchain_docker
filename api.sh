@@ -30,7 +30,7 @@ curl -X 'POST' \
   "temperature": 0.8,
   "max_tokens": 3000,
   "prompt_name": "default",
-  "return_direct": false
+  "return_direct": true
 }
 '
 
@@ -52,3 +52,11 @@ curl -X 'POST' \
   "return_direct": false
 }
 '
+
+
+curl -X POST http://localhost:11434/api/generate      -H "Content-Type: application/json"      -d '{
+       "model": "test",
+       "prompt": "Why is the sky blue?",
+       "stream": true,
+       "max_tokens": 20
+     }'

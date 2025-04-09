@@ -29,12 +29,21 @@ embedding
 8.2
 
 curl -X POST "http://localhost:8101/bot/ragChat" -H "Content-Type: application/json" -d '{
-  "query": "What is edge computing?",
-  "topic": "test"
+  "query": "What is llm?",
+  "topic": "llm",
+  "llm": false
 }'
   "llm": "t"
 
-curl -X POST "http://localhost:8102/bot/ragChat" -H "Content-Type: application/json" -d '{
+curl -X POST "http://localhost:8102/bot/llmChat" -H "Content-Type: application/json" -d '{
   "query": "What is llm?",
-  "topic": "llm"
 }'
+
+
+690
+9610
+104976
+113298+1528= 114826
+總字數為 402528
+總字數為 5373061
+總字數為 63870789

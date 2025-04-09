@@ -62,7 +62,7 @@ def rag_chat():
                     "stream": False,
                     "model": Model_name,
                     "temperature": 0.2,
-                    "max_tokens": 200,
+                    "max_tokens": 1,
                     "prompt_name": "default",
                     "return_direct": not llm,
                 },
@@ -79,8 +79,7 @@ def rag_chat():
                     if llm:
                         content = response_data.get('choices', [{}])[0].get('message', {}).get('content', "")
                     else:
-                        content = response_data.get("docs", [])
-                        content = [doc.split("\n\n")[-2].strip() for doc in content]
+                        content = "hello"
                     return Response(
                         json.dumps({"content": content}, ensure_ascii=False),
                         status=200,
@@ -139,7 +138,7 @@ def llm_chat():
                 "model": Model_name,
                 "stream": False,
                 "temperature": 0.2,
-                "max_tokens": 200,
+                "max_tokens": 1,
             },
             headers={
                 "Content-Type": "application/json",
@@ -170,5 +169,6 @@ def llm_chat():
 
     
 if __name__ == "__main__":
+    print(f"Starting compute node on {Ip}:{Port}")
     register_with_control_node()
     app.run(debug=False, host="0.0.0.0", port=int(Port))

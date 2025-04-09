@@ -9,7 +9,31 @@
     ],
     "compute_node": [
         {
-            "topic": "test",
+            "topic": "edge_computing",
+            "ip": "192.168.60.215",
+            "port": "8103",
+            "control_node": "node1"
+        },
+        {
+            "topic": "rag",
+            "ip": "192.168.60.215",
+            "port": "8102",
+            "control_node": "node1"
+        },
+        {
+            "topic": "llm",
+            "ip": "192.168.60.215",
+            "port": "8104",
+            "control_node": "node1"
+        },
+        {
+            "topic": "all",
+            "ip": "192.168.60.215",
+            "port": "8105",
+            "control_node": "node1"
+        },
+        {
+            "topic": "no",
             "ip": "192.168.60.215",
             "port": "8101",
             "control_node": "node1"
